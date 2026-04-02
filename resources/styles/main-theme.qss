@@ -77,9 +77,23 @@ QScrollBar:vertical {
 
 QScrollBar::handle:vertical {
     background: #4b3f7a;
-    border-radius: 5px;
+    border-radius: 0px;
 }
 
 QScrollBar::handle:vertical:hover {
+    background: #6c5ce7;
+}
+
+QScrollBar:horizontal {
+    background: #1e1b2e;
+    width: 10px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #4b3f7a;
+    border-radius: 0px;
+}
+
+QScrollBar::handle:horizontal:hover {
     background: #6c5ce7;
 }

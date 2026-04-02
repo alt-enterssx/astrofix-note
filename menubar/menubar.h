@@ -26,10 +26,12 @@ class MenuBar: public QWidget
         ~MenuBar();
 
     signals:
+        // | File menu actions signals
+        void saveCurrentFileActionSignal();
+
         // | Other actions signals
         void hideApplicationActionSignal();
         void openFullScreenActionSignal();
-
 
     private slots:
         // | File menu actions methods

@@ -230,7 +230,7 @@ void MenuBar::openFolderActionMethod() {
 }
 
 void MenuBar::saveFileActionMethod() {
-
+    emit saveCurrentFileActionSignal();
 }
 void MenuBar::autoSaveActionMethod() {
     this->config->setAutoSaveSt(this->autoSaveAction->isChecked());

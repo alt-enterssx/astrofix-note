@@ -25,15 +25,31 @@ Win::Win(QWidget* parent): QMainWindow(parent) {
     this->setCentralWidget(centralWidget);
 
     QVBoxLayout* mainLayout = new QVBoxLayout(centralWidget);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+    mainLayout->setSpacing(0);
+
     centralWidget->setLayout(mainLayout);
 
-    // | MenuBar Widget
+    // | MenuBar widget
     this->menuBar = new MenuBar(config, this);
     this->setMenuWidget(menuBar);
+
+    // | Central layout
+    QHBoxLayout* centralLayout = new QHBoxLayout();
+    centralLayout->setContentsMargins(0, 0, 0, 0);
+    centralLayout->setSpacing(0);
+
+    mainLayout->addLayout(centralLayout);
+
+    // | CodeBlock widget
+    this->codeBlock = new CodeBlock(config);
+    centralLayout->addWidget(this->codeBlock);
 
     // | Connects
 
     // | Connects of MenuBar
+    connect(this->menuBar, &MenuBar::saveCurrentFileActionSignal, this->codeBlock, &CodeBlock::saveCurrentFileWrapper);
+
     connect(this->menuBar, &MenuBar::hideApplicationActionSignal, this, &Win::hideApplication);
     connect(this->menuBar, &MenuBar::openFullScreenActionSignal, this, &Win::openFullScreen);
 

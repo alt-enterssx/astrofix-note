@@ -9,6 +9,7 @@
 #include <QSettings>
 
 #include "menubar/menubar.h"
+#include "code_block/code_block.h"
 #include "config/config.h"
 
 class Win: public QMainWindow 
@@ -27,5 +28,5 @@ class Win: public QMainWindow
     private: 
         // | Widgets
         MenuBar* menuBar;
-
+        CodeBlock* codeBlock;
 };
