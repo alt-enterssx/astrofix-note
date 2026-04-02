@@ -2,6 +2,10 @@
 
 // | Contructor
 Win::Win(QWidget* parent): QMainWindow(parent) {
+    // | Settings initialization
+    QSettings* settings = new QSettings("korean", "astrofix-note");
+    Config* config = new Config(settings);
+
     // | Auto reisze and central window
     QScreen* screen = QGuiApplication::primaryScreen();
     if (screen) {
@@ -24,7 +28,7 @@ Win::Win(QWidget* parent): QMainWindow(parent) {
     centralWidget->setLayout(mainLayout);
 
     // | MenuBar Widget
-    this->menuBar = new MenuBar(this);
+    this->menuBar = new MenuBar(config, this);
     this->setMenuWidget(menuBar);
 
     // | Connects

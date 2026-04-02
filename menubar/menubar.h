@@ -9,8 +9,12 @@
 #include <QApplication>
 #include <QUrl>
 #include <QDesktopServices>
+#include <QFileDialog>
+#include <QDir>
 
-#define ABOUT_US_URL "url"
+#include "../config/config.h"
+
+#define ABOUT_US_URL "https://github.com/alt-enterssx"
 #define TECH_SUPPORT_URl "https://t.me/altenter_code"
 
 class MenuBar: public QWidget 
@@ -18,7 +22,7 @@ class MenuBar: public QWidget
     Q_OBJECT
 
     public:
-        MenuBar(QWidget* parent = nullptr);
+        MenuBar(Config* config, QWidget* parent = nullptr);
         ~MenuBar();
 
     signals:
@@ -61,6 +65,9 @@ class MenuBar: public QWidget
         void techSupportActionMethod();
 
     private:
+        // | Config
+        Config* config;
+
         // | File menu actions
         QAction* newFileAction;
 

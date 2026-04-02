@@ -1,8 +1,14 @@
 #include "menubar.h"
 
 // | Constructor
-MenuBar::MenuBar(QWidget* parent): QWidget(parent) {
+MenuBar::MenuBar(Config* config, QWidget* parent): QWidget(parent), config(config) {
 
+    // | Config init
+    if(!config) {
+        qWarning() << "Error in init config";
+    }
+
+    // | Base settings of menu bar
     this->setObjectName("menuBar");
 
     this->setFixedHeight(35);
@@ -183,6 +189,10 @@ MenuBar::MenuBar(QWidget* parent): QWidget(parent) {
 
             windowButtonsLayout->addWidget(exitBtn);
         }
+
+        // | Config set
+        this->autoSaveAction->setChecked(this->config->getAutoSaveSt());
+
     }
 
 }
@@ -193,21 +203,40 @@ void MenuBar::newFileActionMethod() {
 }
         
 void MenuBar::openFileActionMethod() {
+    QString filePath = QFileDialog::getOpenFileName(
+        this, QString("Select File"),
+        QDir::homePath()
+    );
 
+    if (filePath.isEmpty()) { return; }
+
+    Config::Path path = Config::Path();
+    path.path = filePath.toStdString();
+    path.type = Config::Path::PathType::FILE;
+
+    this->config->setCurrentPath(&path);
 }
 void MenuBar::openFolderActionMethod() {
+    QString folderPath = QFileDialog::getExistingDirectory(
+        this, QString("Select Folder"),
+        QDir::homePath(),
+        QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks
+    );
 
+    if (folderPath.isEmpty()) { return; }
+
+    Config::Path path = Config::Path(Config::Path::PathType::FOLDER, folderPath.toStdString());
+    this->config->setCurrentPath(&path);
 }
 
 void MenuBar::saveFileActionMethod() {
 
 }
 void MenuBar::autoSaveActionMethod() {
-
+    this->config->setAutoSaveSt(this->autoSaveAction->isChecked());
 }
 
 void MenuBar::closeFolderActionMethod() {
-
 }
 void MenuBar::closeApplicationActionMethod() {
     QApplication::quit();

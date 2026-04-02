@@ -2,7 +2,7 @@
 QWidget {
     background-color: #1e1b2e;
     color: #d6d6e7;
-    font-family: "JetBrains Mono", "Segoe UI";
+    font-family: "JetBrains Mono";
     font-size: 13px;
 }
 
@@ -15,7 +15,7 @@ QToolButton {
     background: transparent;
     color: #cfc9ff;
     padding: 5px 5px;
-    border-radius: 6px;
+    border-radius: 4px;
 }
 
 QToolButton::menu-indicator {

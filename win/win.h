@@ -6,8 +6,10 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QSettings>
 
 #include "menubar/menubar.h"
+#include "config/config.h"
 
 class Win: public QMainWindow 
 {
