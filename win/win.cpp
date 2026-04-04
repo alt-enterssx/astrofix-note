@@ -52,13 +52,17 @@ Win::Win(QWidget* parent): QMainWindow(parent) {
 
     connect(this->menuBar, &MenuBar::hideApplicationActionSignal, this, &Win::hideApplication);
     connect(this->menuBar, &MenuBar::openFullScreenActionSignal, this, &Win::openFullScreen);
-
-} 
+}
 
 // | MenuBar slots
-void Win::openFullScreen() {
-    if (this->isFullScreen()) { this->showNormal(); }
-    else { this->showFullScreen(); }
+void Win::openFullScreen(QPushButton* fullScreenBtn) {
+    if (this->isFullScreen()) { 
+        this->showNormal(); 
+        fullScreenBtn->setIcon(QIcon(":/menubar/icons/fullscreen.svg"));
+    } else { 
+        this->showFullScreen(); 
+        fullScreenBtn->setIcon(QIcon(":/menubar/icons/normal.svg"));
+    }
 }
 
 void Win::hideApplication() {

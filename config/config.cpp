@@ -34,4 +34,14 @@ bool Config::getAutoSaveSt() {
     return this->settings->value("/application/file-config/autosave").toBool();
 }
 
+
+// | CodeEditor logic
+void Config::setFontSize(int size) {
+    this->settings->setValue("/code_editor/font_size", size);
+}
+
+int Config::getFontSize() {
+    return this->settings->value("/code_editor/font_size", DEFAULT_FONT_SIZE).toInt();
+}
+
 Config::~Config() {}

@@ -3,6 +3,8 @@
 #include <QSettings>
 #include <cstdlib>
 
+#define DEFAULT_FONT_SIZE 12
+
 class Config 
 {
     public:
@@ -30,6 +32,11 @@ class Config
         // | AutoSave logic
         void setAutoSaveSt(bool st);
         bool getAutoSaveSt();
+
+
+        // | CodeEditor logic
+        void setFontSize(int size);
+        int getFontSize();
 
     private:
         QSettings* settings;

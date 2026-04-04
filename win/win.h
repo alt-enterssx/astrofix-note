@@ -22,7 +22,7 @@ class Win: public QMainWindow
 
     private slots:
         // | MenuBar slots
-        void openFullScreen();
+        void openFullScreen(QPushButton* fullScreenBtn);
         void hideApplication();
 
     private: 

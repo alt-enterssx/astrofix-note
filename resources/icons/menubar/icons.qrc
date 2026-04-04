@@ -9,5 +9,6 @@
         <file>show_status_bar_enable.svg</file>
         <file>show_left_side_bar_enable.svg</file>
         <file>show_left_side_bar_disable.svg</file>
+        <file>normal.svg</file>
     </qresource>
 </RCC>

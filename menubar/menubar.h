@@ -31,9 +31,10 @@ class MenuBar: public QWidget
 
         // | Other actions signals
         void hideApplicationActionSignal();
-        void openFullScreenActionSignal();
+        void openFullScreenActionSignal(QPushButton* fullScreenBtn);
 
     private slots:
+
         // | File menu actions methods
         void newFileActionMethod();
         
@@ -46,7 +47,7 @@ class MenuBar: public QWidget
         void closeFolderActionMethod();
         void closeApplicationActionMethod();
 
-        // | Other actions method
+        // Window actions method
         void hideApplicationActionMethod();
         void openFullScreenActionMethod();
 
@@ -97,4 +98,7 @@ class MenuBar: public QWidget
         // | Help menu actions
         QAction* aboutUsAction;
         QAction* techSupportAction;
+
+        // | Ui states widget
+        QPushButton* showFullScreenBtn;
 };

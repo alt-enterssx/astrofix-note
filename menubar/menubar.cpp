@@ -160,24 +160,29 @@ MenuBar::MenuBar(Config* config, QWidget* parent): QWidget(parent), config(confi
             windowButtonsLayout->setSpacing(8);
 
             QPushButton* hideBtn = new QPushButton();
+            hideBtn->setShortcut(QKeySequence("Ctrl+Shift+H"));
+
             hideBtn->setIcon(QIcon(":/menubar/icons/hide.svg"));
             hideBtn->setIconSize(QSize(10, 10));
             
             hideBtn->setFixedSize(26, 26);
 
+            
             connect(hideBtn, &QPushButton::clicked, this, &MenuBar::hideApplicationActionMethod);
 
             windowButtonsLayout->addWidget(hideBtn);
 
-            QPushButton* showFullScreenBtn = new QPushButton();
-            showFullScreenBtn->setIcon(QIcon(":/menubar/icons/fullscreen.svg"));
-            showFullScreenBtn->setIconSize(QSize(10, 10));
+            this->showFullScreenBtn = new QPushButton();
+            this->showFullScreenBtn->setShortcut(QKeySequence("Ctrl+F"));
 
-            showFullScreenBtn->setFixedSize(26, 26);
+            this->showFullScreenBtn->setIcon(QIcon(":/menubar/icons/fullscreen.svg"));
+            this->showFullScreenBtn->setIconSize(QSize(10, 10));
 
-            connect(showFullScreenBtn, &QPushButton::clicked, this, &MenuBar::openFullScreenActionMethod);
+            this->showFullScreenBtn->setFixedSize(26, 26);
 
-            windowButtonsLayout->addWidget(showFullScreenBtn);
+            connect(this->showFullScreenBtn, &QPushButton::clicked, this, &MenuBar::openFullScreenActionMethod);
+
+            windowButtonsLayout->addWidget(this->showFullScreenBtn);
 
             QPushButton* exitBtn = new QPushButton();
             exitBtn->setIcon(QIcon(":/menubar/icons/exit.svg"));
@@ -243,12 +248,12 @@ void MenuBar::closeApplicationActionMethod() {
 }
 
 
-// | Other actions method
+// | Window actions method
 void MenuBar::hideApplicationActionMethod() {
     emit MenuBar::hideApplicationActionSignal();
 }
 void MenuBar::openFullScreenActionMethod() {
-    emit MenuBar::openFullScreenActionSignal();
+    emit MenuBar::openFullScreenActionSignal(this->showFullScreenBtn);
 }
 
 
