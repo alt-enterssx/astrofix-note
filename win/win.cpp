@@ -50,6 +50,7 @@ Win::Win(QWidget* parent): QMainWindow(parent) {
     // | Connects
 
     // | Connects of MenuBar
+    connect(this->menuBar, &MenuBar::openFileActionSignal, this->codeBlock, &CodeBlock::openFileWrapper);
     connect(this->menuBar, &MenuBar::saveCurrentFileActionSignal, this->codeBlock, &CodeBlock::saveCurrentFileWrapper);
 
     connect(this->menuBar, &MenuBar::hideApplicationActionSignal, this, &Win::hideApplication);

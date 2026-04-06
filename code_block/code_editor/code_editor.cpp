@@ -35,7 +35,7 @@ namespace
     };
 }
 
-CodeEditor::CodeEditor(Config* config, QWidget* parent): QPlainTextEdit(parent), config(config) {
+CodeEditor::CodeEditor(Config* config, QWidget* parent): QPlainTextEdit(parent), config(config), currentFile(nullptr) {
     // | Config init
     if(!config) {
         qWarning() << "Error in init config";
@@ -150,7 +150,7 @@ void CodeEditor::keyPressEvent(QKeyEvent* event) {
             QString text = block.text();
 
             int indent = 0;
-            while (indent <= text.length() && text.at(indent) == ' ') {
+            while (indent < text.length() && text.at(indent) == ' ') {
                 indent++;
             }
 
@@ -313,17 +313,45 @@ void CodeEditor::contextMenuEvent(QContextMenuEvent* event) {
 
 // | File works
 void CodeEditor::saveCurrentFileMethod() {
-    std::string saveText = this->toPlainText().toStdString();
+    QString saveText = this->toPlainText();
 
-    Config::Path path = this->config->getCurrentPath();
-    if (path.type != Config::Path::PathType::FILE) { return; }
+    if (!this->currentFile) {
+        Config::Path path = this->config->getCurrentPath();
 
-    QFile file(QString(path.path.c_str()));
-    if (file.open(QFile::Text | QFile::WriteOnly | QFile::Truncate)) {
-        file.write(saveText.c_str());
-        file.close();
+        if (path.type != Config::Path::PathType::FILE) {
+            return;
+        }
+
+        this->currentFile = new QFile(QString::fromStdString(path.path));
     }
 
+    if (!this->currentFile->isOpen()) {
+        if (!this->currentFile->open(QFile::WriteOnly | QFile::Text | QFile::Truncate)) {
+            return;
+        }
+    }
+
+    this->currentFile->resize(0);
+    this->currentFile->write(saveText.toUtf8());
+    this->currentFile->flush(); 
+}
+
+void CodeEditor::openFileMethod(QString path) {
+    QFileInfo fileInfo(path);
+
+    if (fileInfo.isDir()) { return; }
+
+    QFile* tmp = new QFile(path);
+    if (tmp->open(QFile::Text | QFile::ReadWrite)) {
+        if (this->currentFile != nullptr) {
+            this->currentFile->close();
+        }
+
+        this->currentFile = tmp;
+        
+        QString readed = this->currentFile->readAll();
+        this->setPlainText(readed);
+    }
 }
 
 // | Slots for signals

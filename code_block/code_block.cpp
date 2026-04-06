@@ -19,6 +19,7 @@ CodeBlock::CodeBlock(Config* config, QWidget* parent): QWidget(parent), config(c
 }
 
 // | Wrapped slots
+void CodeBlock::openFileWrapper(QString path) { this->codeEditor->openFileMethod(path); }
 void CodeBlock::saveCurrentFileWrapper() { this->codeEditor->saveCurrentFileMethod(); }
 
 void CodeBlock::undoActionWrapper() { this->codeEditor->undo(); }

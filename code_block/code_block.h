@@ -16,6 +16,7 @@ class CodeBlock: public QWidget
 
     public slots:
         // | Wrapped slots
+        void openFileWrapper(QString path);
         void saveCurrentFileWrapper();
 
         void undoActionWrapper();

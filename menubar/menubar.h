@@ -27,6 +27,7 @@ class MenuBar: public QWidget
 
     signals:
         // | File menu actions signals
+        void openFileActionSignal(QString path);
         void saveCurrentFileActionSignal();
 
         // | Other actions signals

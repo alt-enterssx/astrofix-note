@@ -6,12 +6,13 @@
 #include <QTextCursor>
 #include <QTextBlock>
 #include <QTimer>
-#include <cstdlib>
 #include <QClipboard>
 #include <QGuiApplication>
 #include <QContextMenuEvent>
 #include <QMenu>
 #include <QAction>
+#include <QFileInfo>
+#include <cstdlib>
 
 #include "../../config/config.h"
 
@@ -35,6 +36,7 @@ class CodeEditor: public QPlainTextEdit
     public slots: 
         // | File works
         void saveCurrentFileMethod();
+        void openFileMethod(QString path);
 
         // | Slots for signals
         void onTextChanged();
@@ -49,7 +51,11 @@ class CodeEditor: public QPlainTextEdit
         void selectAllHandle();
 
     private:
+        // | Config
         Config* config;
+
+        // | Other
+        QFile* currentFile;
 
         // | Timers
         QTimer* autoSaveTimer;

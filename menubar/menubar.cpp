@@ -218,6 +218,7 @@ void MenuBar::openFileActionMethod() {
     path.type = Config::Path::PathType::FILE;
 
     this->config->setCurrentPath(&path);
+    emit openFileActionSignal(QString(path.path.c_str()));
 }
 void MenuBar::openFolderActionMethod() {
     QString folderPath = QFileDialog::getExistingDirectory(
