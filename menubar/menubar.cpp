@@ -81,12 +81,10 @@ MenuBar::MenuBar(Config* config, QWidget* parent): QWidget(parent), config(confi
             this->copyAction = editMenu->addAction("Copy", QKeySequence("Ctrl+C"), this, &MenuBar::copyActionMethod);
             this->pasteAction = editMenu->addAction("Paste", QKeySequence("Ctrl+P"), this, &MenuBar::pasteActionMethod);
             this->cutAction = editMenu->addAction("Cut", QKeySequence("Ctrl+x"), this, &MenuBar::cutActionMethod);
-            this->deleteAction = editMenu->addAction("Delete", QKeySequence("Ctrl+D"), this, &MenuBar::deleteActionMethod);
-
-            editMenu->addSeparator();
-
             this->selectAllAction = editMenu->addAction("Select All", QKeySequence("Ctrl+A"), this, &MenuBar::selectAllActionMethod);
-            this->findInFilesAction = editMenu->addAction("Find In Files", QKeySequence("Ctrl+Shift+F"), this, &MenuBar::findInFilesMethodAction);
+            
+            editMenu->addSeparator();
+            this->findInFilesAction = editMenu->addAction("Find In File", QKeySequence("Ctrl+Shift+F"), this, &MenuBar::findInFilesMethodAction);
         }
 
         // | Help Menu
@@ -259,28 +257,25 @@ void MenuBar::openFullScreenActionMethod() {
 
 // | Edit menu actions methods
 void MenuBar::undoActionMethod() {
-
+    emit undoActionSignal();
 }
 void MenuBar::redoActionMethod() {
-
+    emit redoActionSignal();
 }
 
 void MenuBar::copyActionMethod() {
-
+    emit copyActionSignal();
 }
 void MenuBar::pasteActionMethod() {
-
+    emit pasteActionSignal();
 }
 void MenuBar::cutActionMethod() {
-
+    emit cutActionSignal();
 }
-void MenuBar::deleteActionMethod() {
-
-}
-        
 void MenuBar::selectAllActionMethod() {
-
+    emit selectAllActionSignal();
 }
+
 void MenuBar::findInFilesMethodAction() {
 
 }

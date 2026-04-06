@@ -33,6 +33,15 @@ class MenuBar: public QWidget
         void hideApplicationActionSignal();
         void openFullScreenActionSignal(QPushButton* fullScreenBtn);
 
+        // | Code editor action signals
+        void undoActionSignal();
+        void redoActionSignal();
+        
+        void copyActionSignal();
+        void pasteActionSignal();
+        void cutActionSignal();
+        void selectAllActionSignal();
+
     private slots:
 
         // | File menu actions methods
@@ -58,9 +67,8 @@ class MenuBar: public QWidget
         void copyActionMethod();
         void pasteActionMethod();
         void cutActionMethod();
-        void deleteActionMethod();
-        
         void selectAllActionMethod();
+        
         void findInFilesMethodAction();
 
         // | Help menu actions methods
@@ -90,9 +98,8 @@ class MenuBar: public QWidget
         QAction* copyAction;
         QAction* pasteAction;
         QAction* cutAction;
-        QAction* deleteAction;
-        
         QAction* selectAllAction;
+        
         QAction* findInFilesAction;
 
         // | Help menu actions

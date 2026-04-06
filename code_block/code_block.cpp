@@ -21,4 +21,17 @@ CodeBlock::CodeBlock(Config* config, QWidget* parent): QWidget(parent), config(c
 // | Wrapped slots
 void CodeBlock::saveCurrentFileWrapper() { this->codeEditor->saveCurrentFileMethod(); }
 
+void CodeBlock::undoActionWrapper() { this->codeEditor->undo(); }
+
+void CodeBlock::redoActionWrapper() { this->codeEditor->redo(); }
+
+void CodeBlock::copyActionWrapper() { this->codeEditor->copyHandle(); }
+
+void CodeBlock::pasteActionWrapper() { this->codeEditor->pasteHandle(); }
+
+void CodeBlock::cutActionWrapper() { this->codeEditor->cutHandle(); }
+
+void CodeBlock::selectAllActionWrapper() { this->codeEditor->selectAllHandle(); }
+
+
 CodeBlock::~CodeBlock() {}

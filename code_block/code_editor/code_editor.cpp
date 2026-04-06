@@ -41,6 +41,8 @@ CodeEditor::CodeEditor(Config* config, QWidget* parent): QPlainTextEdit(parent),
         qWarning() << "Error in init config";
     }
 
+    CodeEditor::highlightCurrentLine();
+
     // | Timers
     autoSaveTimer = new QTimer(this);
     autoSaveTimer->setSingleShot(true);
@@ -49,9 +51,14 @@ CodeEditor::CodeEditor(Config* config, QWidget* parent): QPlainTextEdit(parent),
     this->setLineWrapMode(QPlainTextEdit::NoWrap);
     this->setUndoRedoEnabled(true);
 
+    QPalette selectedTextPallete = this->palette();
+    selectedTextPallete.setColor(QPalette::Highlight, QColor("#201c2a"));
+    this->setPalette(selectedTextPallete);
+
     // | Connect plain text edit
     connect(this, &QPlainTextEdit::textChanged, this, &CodeEditor::onTextChanged);
-    
+    connect(this, &QPlainTextEdit::cursorPositionChanged, this, &CodeEditor::highlightCurrentLine);
+
     // | Connect timeers
     connect(autoSaveTimer, &QTimer::timeout, this, &CodeEditor::autoSaveMethod);
 
@@ -61,7 +68,6 @@ CodeEditor::CodeEditor(Config* config, QWidget* parent): QPlainTextEdit(parent),
     font.setPointSize(fontSize);
 
     this->setFont(font);
-
 }
 
 // | KeyPress filters
@@ -272,84 +278,37 @@ void CodeEditor::modifiersFilter(QTextCursor* cursor, QKeyEvent* event) {
                 return;
             }
             case Qt::Key_C: {
-                if (cursor->hasSelection()) {
-                    return QPlainTextEdit::keyPressEvent(event);
-                }
-
-                cursor->select(QTextCursor::BlockUnderCursor);
-                QString copyLine = cursor->selectedText();
-
-                QClipboard* clipboard = QGuiApplication::clipboard();
-                clipboard->setText(copyLine);
-
-                return;
+                return CodeEditor::copyHandle();
             }
             case Qt::Key_V: {
-                if (cursor->hasSelection()) {
-                    return QPlainTextEdit::keyPressEvent(event);
-                }
-
-                QClipboard* clipboard = QGuiApplication::clipboard();
-                QString pastedLine;
-
-                if (clipboard->text().isEmpty()) { return; }
-
-                if (cursor->position() == 0 || cursor->positionInBlock() == 0) {
-                    pastedLine = clipboard->text() + "\n";
-                } else if (cursor->positionInBlock() > 0) {
-                    pastedLine = clipboard->text();
-                }
-
-                cursor->insertText(pastedLine);
-                return;
+                return CodeEditor::pasteHandle();
             }
             case Qt::Key_X: {
-                if (cursor->hasSelection()) {
-                    return QPlainTextEdit::keyPressEvent(event);
-                }
-
-                cursor->beginEditBlock();
-
-                cursor->select(QTextCursor::BlockUnderCursor);
-                QString cutLine = cursor->selectedText();
-
-                QClipboard* clipboard = QGuiApplication::clipboard();
-                clipboard->setText(cutLine);
-
-                cursor->removeSelectedText();
-                cursor->deleteChar();
-
-                cursor->endEditBlock();
-
-                return;
-            }
-            case Qt::Key_D: {
-                if (cursor->hasSelection()) {
-                    cursor->removeSelectedText();
-                    return;
-                }
-                cursor->beginEditBlock();
-
-                cursor->select(QTextCursor::BlockUnderCursor);
-                cursor->removeSelectedText();
-                cursor->deleteChar();
-
-                cursor->endEditBlock();
-
-                return;
+                return CodeEditor::cutHandle();
             }
             case Qt::Key_A: {
-                if (cursor->hasSelection()) {
-                    return QPlainTextEdit::keyPressEvent(event);
-                }
-
-                this->selectAll();
-                return;
-        }
+                return CodeEditor::selectAllHandle();
+            }
         }
     }
 
     return QPlainTextEdit::keyPressEvent(event);
+}
+
+// | Context menu event
+void CodeEditor::contextMenuEvent(QContextMenuEvent* event) {
+    QMenu* contextMenu = new QMenu(this);
+    QAction* undoAction = contextMenu->addAction("Undo", this, &QPlainTextEdit::undo);
+    QAction* redoAction = contextMenu->addAction("Redo", this, &QPlainTextEdit::redo);
+
+    contextMenu->addSeparator();
+
+    QAction* copyAction = contextMenu->addAction("Copy", this, &CodeEditor::copyHandle);
+    QAction* pasteAction = contextMenu->addAction("Paste", this, &CodeEditor::pasteHandle);
+    QAction* cutAction = contextMenu->addAction("Cut", this, &CodeEditor::cutHandle);
+    QAction* selectAllAction = contextMenu->addAction("Select All", this, &CodeEditor::selectAllHandle);
+
+    QAction* selected = contextMenu->exec(event->globalPos());
 }
 
 // | File works
@@ -377,6 +336,96 @@ void CodeEditor::autoSaveMethod() {
     if (this->config->getAutoSaveSt()) {
         return CodeEditor::saveCurrentFileMethod();
     }
+}
+
+// | Modifiers methods
+void CodeEditor::copyHandle() {
+    QTextCursor cursor = this->textCursor();
+    if (cursor.hasSelection()) {
+        return QPlainTextEdit::copy();
+    }
+
+    cursor.select(QTextCursor::BlockUnderCursor);
+    QString copyLine = cursor.selectedText();
+
+    QClipboard* clipboard = QGuiApplication::clipboard();
+    clipboard->setText(copyLine);
+
+    return;
+}
+
+void CodeEditor::pasteHandle() {
+    QTextCursor cursor = this->textCursor();
+    if (cursor.hasSelection()) {
+        return QPlainTextEdit::paste();
+    }
+
+    QClipboard* clipboard = QGuiApplication::clipboard();
+    QString pastedLine;
+
+    if (clipboard->text().isEmpty()) { return; }
+
+    if (cursor.position() == 0 || cursor.positionInBlock() == 0) {
+        pastedLine = clipboard->text() + "\n";
+    } else if (cursor.positionInBlock() > 0) {
+        pastedLine = clipboard->text();
+    }
+
+    cursor.insertText(pastedLine);
+    return;
+}
+
+void CodeEditor::cutHandle() {
+    QTextCursor cursor = this->textCursor();
+    if (cursor.hasSelection()) {
+        return QPlainTextEdit::cut();
+    }
+
+    cursor.beginEditBlock();
+
+    cursor.select(QTextCursor::BlockUnderCursor);
+    QString cutLine = cursor.selectedText();
+
+    QClipboard* clipboard = QGuiApplication::clipboard();
+    clipboard->setText(cutLine);
+
+    cursor.removeSelectedText();
+    cursor.deleteChar();
+
+    cursor.endEditBlock();
+
+    return;
+}
+
+void CodeEditor::selectAllHandle() {
+    QTextCursor cursor = this->textCursor();
+    if (cursor.hasSelection()) {
+        return QPlainTextEdit::selectAll();
+    }
+
+    this->selectAll();
+    return;
+}
+
+// | Visuals method
+void CodeEditor::highlightCurrentLine() {
+    QList<QTextEdit::ExtraSelection> extraSelections;
+
+    if (!this->isReadOnly()) {
+        QTextEdit::ExtraSelection selection;
+
+        QColor lineColor = QColor("#1c1926");
+
+        selection.format.setBackground(lineColor);
+        selection.format.setProperty(QTextFormat::FullWidthSelection, true);
+
+        selection.cursor = this->textCursor();
+        selection.cursor.clearSelection();
+
+        extraSelections.append(selection);
+    }
+
+    this->setExtraSelections(extraSelections);
 }
 
 CodeEditor::~CodeEditor() {}

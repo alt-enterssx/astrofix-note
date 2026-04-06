@@ -41,9 +41,11 @@ Win::Win(QWidget* parent): QMainWindow(parent) {
 
     mainLayout->addLayout(centralLayout);
 
+    // | FileBlock widget
+
     // | CodeBlock widget
     this->codeBlock = new CodeBlock(config);
-    centralLayout->addWidget(this->codeBlock);
+    centralLayout->addWidget(this->codeBlock, 10);
 
     // | Connects
 
@@ -52,6 +54,14 @@ Win::Win(QWidget* parent): QMainWindow(parent) {
 
     connect(this->menuBar, &MenuBar::hideApplicationActionSignal, this, &Win::hideApplication);
     connect(this->menuBar, &MenuBar::openFullScreenActionSignal, this, &Win::openFullScreen);
+
+    connect(this->menuBar, &MenuBar::undoActionSignal, this->codeBlock, &CodeBlock::undoActionWrapper);
+    connect(this->menuBar, &MenuBar::redoActionSignal, this->codeBlock, &CodeBlock::redoActionWrapper);
+
+    connect(this->menuBar, &MenuBar::copyActionSignal, this->codeBlock, &CodeBlock::copyActionWrapper);
+    connect(this->menuBar, &MenuBar::pasteActionSignal, this->codeBlock, &CodeBlock::pasteActionWrapper);
+    connect(this->menuBar, &MenuBar::cutActionSignal, this->codeBlock, &CodeBlock::cutActionWrapper);
+    connect(this->menuBar, &MenuBar::selectAllActionSignal, this->codeBlock, &CodeBlock::selectAllActionWrapper);
 }
 
 // | MenuBar slots

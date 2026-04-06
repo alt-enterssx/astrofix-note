@@ -9,6 +9,9 @@
 #include <cstdlib>
 #include <QClipboard>
 #include <QGuiApplication>
+#include <QContextMenuEvent>
+#include <QMenu>
+#include <QAction>
 
 #include "../../config/config.h"
 
@@ -26,6 +29,9 @@ class CodeEditor: public QPlainTextEdit
         void charsFilter(QTextCursor* cursor, QChar sym, QKeyEvent* event);
         void modifiersFilter(QTextCursor* cursor, QKeyEvent* event);
 
+        // | Context menu event
+        void contextMenuEvent(QContextMenuEvent* event);
+
     public slots: 
         // | File works
         void saveCurrentFileMethod();
@@ -36,9 +42,18 @@ class CodeEditor: public QPlainTextEdit
         // | Slots for timers
         void autoSaveMethod();
 
+        // | Modifiers methods
+        void copyHandle();
+        void pasteHandle();
+        void cutHandle();
+        void selectAllHandle();
+
     private:
         Config* config;
 
         // | Timers
         QTimer* autoSaveTimer;
+
+        // | Visual methods
+        void highlightCurrentLine();
 };

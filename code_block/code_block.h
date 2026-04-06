@@ -18,6 +18,14 @@ class CodeBlock: public QWidget
         // | Wrapped slots
         void saveCurrentFileWrapper();
 
+        void undoActionWrapper();
+        void redoActionWrapper();
+
+        void copyActionWrapper();
+        void pasteActionWrapper();
+        void cutActionWrapper();
+        void selectAllActionWrapper();
+
     private:
         Config* config;
         CodeEditor* codeEditor;
