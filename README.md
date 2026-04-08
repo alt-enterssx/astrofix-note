@@ -6,7 +6,7 @@
 ## 📌 Description
 
 Astrofix Note is an application for creating and managing notes.  
-(Replace this with the actual description of your project)
+
 
 ## 🚀 Features
 
