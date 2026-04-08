@@ -350,6 +350,8 @@ void CodeEditor::openFileMethod(QString path) {
         this->currentFile = tmp;
         
         QString readed = this->currentFile->readAll();
+        this->currentFile->close();
+
         this->setPlainText(readed);
     }
 }

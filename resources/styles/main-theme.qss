@@ -77,7 +77,8 @@ width: 10px;
 
 QScrollBar::handle:vertical {
 background: #3a3360;
-border-radius: 3px;
+border-radius: 0px;
+min-width: 30px;
 }
 
 QScrollBar::handle:vertical:hover {
@@ -91,7 +92,7 @@ height: 10px;
 
 QScrollBar::handle:horizontal {
 background: #3a3360;
-border-radius: 3px;
+border-radius: 0px;
 }
 
 QScrollBar::handle:horizontal:hover {
@@ -141,4 +142,16 @@ image: none;
 
 QTreeView::branch:open:has-children {
 image: none;
+}
+
+#headerFileBlock {
+background-color: #110F18;
+border-bottom: 1px solid #1F1E25;
+}
+
+#headerFileBlock QLabel {
+background-color: transparent;
+color: #C5C6C7;
+font-size: 13px;
+font-weight: 500;
 }

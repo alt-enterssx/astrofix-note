@@ -41,10 +41,6 @@ MenuBar::MenuBar(Config* config, QWidget* parent): QWidget(parent), config(confi
             QMenu* fileMenu = new QMenu(fileMenuBtn);
             fileMenuBtn->setMenu(fileMenu);
 
-            this->newFileAction =  fileMenu->addAction("New File", QKeySequence("Ctrl+N"), this, &MenuBar::newFileActionMethod);
-
-            fileMenu->addSeparator();
-
             this->openFileAction = fileMenu->addAction("Open File", QKeySequence("Ctrl+O"), this, &MenuBar::openFileActionMethod);
             this->openFolderAction = fileMenu->addAction("Open Folder", QKeySequence("Ctrl+Shift+O"), this, &MenuBar::openFolderActionMethod);
         
@@ -57,7 +53,6 @@ MenuBar::MenuBar(Config* config, QWidget* parent): QWidget(parent), config(confi
 
             fileMenu->addSeparator();
 
-            this->closeFolderAction = fileMenu->addAction("Close Folder", this, &MenuBar::closeFolderActionMethod);
             this->closeApplicationAction = fileMenu->addAction("Quit", QKeySequence("Ctrl+Q"), this, &MenuBar::closeApplicationActionMethod);
         }
 
@@ -82,9 +77,6 @@ MenuBar::MenuBar(Config* config, QWidget* parent): QWidget(parent), config(confi
             this->pasteAction = editMenu->addAction("Paste", QKeySequence("Ctrl+P"), this, &MenuBar::pasteActionMethod);
             this->cutAction = editMenu->addAction("Cut", QKeySequence("Ctrl+x"), this, &MenuBar::cutActionMethod);
             this->selectAllAction = editMenu->addAction("Select All", QKeySequence("Ctrl+A"), this, &MenuBar::selectAllActionMethod);
-            
-            editMenu->addSeparator();
-            this->findInFilesAction = editMenu->addAction("Find In File", QKeySequence("Ctrl+Shift+F"), this, &MenuBar::findInFilesMethodAction);
         }
 
         // | Help Menu
@@ -123,30 +115,15 @@ MenuBar::MenuBar(Config* config, QWidget* parent): QWidget(parent), config(confi
             viewButtonsLayout->setContentsMargins(0, 0, 0, 0);
             viewButtonsLayout->setSpacing(8);
 
-            QPushButton* showLeftSideBarBtn = new QPushButton();
-            showLeftSideBarBtn->setIcon(QIcon(":/menubar/icons/show_left_side_bar_disable.svg"));
-            showLeftSideBarBtn->setIconSize(QSize(12, 12));
+            this->showLeftSideBarBtn = new QPushButton();
+            this->showLeftSideBarBtn->setIcon(QIcon(":/menubar/icons/show_left_side_bar_enable.svg"));
+            this->showLeftSideBarBtn->setIconSize(QSize(12, 12));
 
-            showLeftSideBarBtn->setFixedSize(26, 26);
+            this->showLeftSideBarBtn->setFixedSize(26, 26);
             
-            viewButtonsLayout->addWidget(showLeftSideBarBtn);
+            connect(this->showLeftSideBarBtn, &QPushButton::clicked, this, &MenuBar::showLeftSideBarMethod);
 
-            QPushButton* showStatusBarBtn = new QPushButton();
-            showStatusBarBtn->setIcon(QIcon(":/menubar/icons/show_status_bar_disable.svg"));
-            showStatusBarBtn->setIconSize(QSize(12, 12));
-
-            showStatusBarBtn->setFixedSize(26, 26);
-
-            viewButtonsLayout->addWidget(showStatusBarBtn);
-
-            QPushButton* showMenuBarBtn = new QPushButton();
-            showMenuBarBtn->setIcon(QIcon(":/menubar/icons/show_menu_bar_disable.svg"));
-            showMenuBarBtn->setIconSize(QSize(12, 12));
-
-            showMenuBarBtn->setFixedSize(26, 26);
-
-            viewButtonsLayout->addWidget(showMenuBarBtn);
-
+            viewButtonsLayout->addWidget(this->showLeftSideBarBtn);
         }
 
         // | Window buttons layout
@@ -201,10 +178,6 @@ MenuBar::MenuBar(Config* config, QWidget* parent): QWidget(parent), config(confi
 }
 
 // | File menu actions methods
-void MenuBar::newFileActionMethod() {
-
-}
-        
 void MenuBar::openFileActionMethod() {
     QString filePath = QFileDialog::getOpenFileName(
         this, QString("Select File"),
@@ -218,7 +191,7 @@ void MenuBar::openFileActionMethod() {
     path.type = Config::Path::PathType::FILE;
 
     this->config->setCurrentPath(&path);
-    emit openFileActionSignal(QString(path.path.c_str()));
+    emit openFileActionSignal(filePath);
 }
 void MenuBar::openFolderActionMethod() {
     QString folderPath = QFileDialog::getExistingDirectory(
@@ -231,6 +204,8 @@ void MenuBar::openFolderActionMethod() {
 
     Config::Path path = Config::Path(Config::Path::PathType::FOLDER, folderPath.toStdString());
     this->config->setCurrentPath(&path);
+
+    emit openFolderActionSignal(folderPath);
 }
 
 void MenuBar::saveFileActionMethod() {
@@ -240,8 +215,6 @@ void MenuBar::autoSaveActionMethod() {
     this->config->setAutoSaveSt(this->autoSaveAction->isChecked());
 }
 
-void MenuBar::closeFolderActionMethod() {
-}
 void MenuBar::closeApplicationActionMethod() {
     QApplication::quit();
 }
@@ -277,10 +250,6 @@ void MenuBar::selectAllActionMethod() {
     emit selectAllActionSignal();
 }
 
-void MenuBar::findInFilesMethodAction() {
-
-}
-
 // | Help menu actions methods
 void MenuBar::aboutUsActionMethod() {
     QUrl url = QUrl(ABOUT_US_URL);
@@ -289,6 +258,11 @@ void MenuBar::aboutUsActionMethod() {
 void MenuBar::techSupportActionMethod() {
     QUrl url = QUrl(TECH_SUPPORT_URl);
     QDesktopServices::openUrl(url);
+}
+
+// | View actions
+void MenuBar::showLeftSideBarMethod() {
+    emit showLeftSideBarSignal(this->showLeftSideBarBtn);
 }
 
 // | Destructor

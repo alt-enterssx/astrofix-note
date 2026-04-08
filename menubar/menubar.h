@@ -28,6 +28,7 @@ class MenuBar: public QWidget
     signals:
         // | File menu actions signals
         void openFileActionSignal(QString path);
+        void openFolderActionSignal(QString path);
         void saveCurrentFileActionSignal();
 
         // | Other actions signals
@@ -43,18 +44,18 @@ class MenuBar: public QWidget
         void cutActionSignal();
         void selectAllActionSignal();
 
+        // | View signals
+        void showLeftSideBarSignal(QPushButton* leftSideBarBtn);
+
     private slots:
 
         // | File menu actions methods
-        void newFileActionMethod();
-        
         void openFileActionMethod();
         void openFolderActionMethod();
 
         void saveFileActionMethod();
         void autoSaveActionMethod();
 
-        void closeFolderActionMethod();
         void closeApplicationActionMethod();
 
         // Window actions method
@@ -69,27 +70,25 @@ class MenuBar: public QWidget
         void pasteActionMethod();
         void cutActionMethod();
         void selectAllActionMethod();
-        
-        void findInFilesMethodAction();
 
         // | Help menu actions methods
         void aboutUsActionMethod();
         void techSupportActionMethod();
+
+        // | View actions
+        void showLeftSideBarMethod();
 
     private:
         // | Config
         Config* config;
 
         // | File menu actions
-        QAction* newFileAction;
-
         QAction* openFileAction;
         QAction* openFolderAction;
 
         QAction* saveFileAction;
         QAction* autoSaveAction;
 
-        QAction* closeFolderAction;
         QAction* closeApplicationAction;
 
         // | Edit menu actions
@@ -100,8 +99,6 @@ class MenuBar: public QWidget
         QAction* pasteAction;
         QAction* cutAction;
         QAction* selectAllAction;
-        
-        QAction* findInFilesAction;
 
         // | Help menu actions
         QAction* aboutUsAction;
@@ -109,4 +106,5 @@ class MenuBar: public QWidget
 
         // | Ui states widget
         QPushButton* showFullScreenBtn;
+        QPushButton* showLeftSideBarBtn;
 };

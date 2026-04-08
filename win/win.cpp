@@ -42,6 +42,8 @@ Win::Win(QWidget* parent): QMainWindow(parent) {
     mainLayout->addLayout(centralLayout);
 
     // | FileBlock widget
+    this->fileBlock = new FileBlock(config);
+    centralLayout->addWidget(this->fileBlock, 4);
 
     // | CodeBlock widget
     this->codeBlock = new CodeBlock(config);
@@ -50,7 +52,11 @@ Win::Win(QWidget* parent): QMainWindow(parent) {
     // | Connects
 
     // | Connects of MenuBar
-    connect(this->menuBar, &MenuBar::openFileActionSignal, this->codeBlock, &CodeBlock::openFileWrapper);
+    connect(this->menuBar, &MenuBar::openFileActionSignal, this, [this] (QString path) {
+        this->codeBlock->openFileWrapper(path);
+        this->fileBlock->openFile(path);
+    });
+    connect(this->menuBar, &MenuBar::openFolderActionSignal, this->fileBlock, &FileBlock::openFile);
     connect(this->menuBar, &MenuBar::saveCurrentFileActionSignal, this->codeBlock, &CodeBlock::saveCurrentFileWrapper);
 
     connect(this->menuBar, &MenuBar::hideApplicationActionSignal, this, &Win::hideApplication);
@@ -63,16 +69,31 @@ Win::Win(QWidget* parent): QMainWindow(parent) {
     connect(this->menuBar, &MenuBar::pasteActionSignal, this->codeBlock, &CodeBlock::pasteActionWrapper);
     connect(this->menuBar, &MenuBar::cutActionSignal, this->codeBlock, &CodeBlock::cutActionWrapper);
     connect(this->menuBar, &MenuBar::selectAllActionSignal, this->codeBlock, &CodeBlock::selectAllActionWrapper);
+    
+    connect(this->menuBar, &MenuBar::showLeftSideBarSignal, this, &Win::showLeftSideBar);
+
+    // | Connects of FileBlock
+    connect(this->fileBlock, &FileBlock::selectFileToOpen, this->codeBlock, &CodeBlock::openFileWrapper);
 }
 
 // | MenuBar slots
-void Win::openFullScreen(QPushButton* fullScreenBtn) {
+void Win::openFullScreen(QPushButton* btn) {
     if (this->isFullScreen()) { 
         this->showNormal(); 
-        fullScreenBtn->setIcon(QIcon(":/menubar/icons/fullscreen.svg"));
+        btn->setIcon(QIcon(":/menubar/icons/fullscreen.svg"));
     } else { 
         this->showFullScreen(); 
-        fullScreenBtn->setIcon(QIcon(":/menubar/icons/normal.svg"));
+        btn->setIcon(QIcon(":/menubar/icons/normal.svg"));
+    }
+}
+
+void Win::showLeftSideBar(QPushButton* btn) {
+    if (this->fileBlock->isVisible()) {
+        this->fileBlock->hide();
+        btn->setIcon(QIcon(":/menubar/icons/show_left_side_bar_disable.svg"));
+    } else {
+        this->fileBlock->show();
+        btn->setIcon(QIcon(":/menubar/icons/show_left_side_bar_enable.svg"));
     }
 }
 
